@@ -34,7 +34,8 @@ public class AnimaisServlet extends HttpServlet {
 		}
 		else if (action.equals("buscar")) {
 			String id = request.getParameter("id");
-			buscar(request, response, Long.getLong(id));
+			Long parsedId = Long.parseLong(id);
+			buscar(request, response, parsedId);
 		}
 	}
 
