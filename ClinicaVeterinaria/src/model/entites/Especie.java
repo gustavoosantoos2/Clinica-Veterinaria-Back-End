@@ -1,4 +1,4 @@
-package model;
+package model.entites;
 
 import model.utils.StringUtils;
 

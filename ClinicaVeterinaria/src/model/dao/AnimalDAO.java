@@ -5,8 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import model.Animal;
-import model.Especie;
+import model.entites.Animal;
+import model.entites.Especie;
 
 public class AnimalDAO extends AbstractDAO<Animal, Long> {
 

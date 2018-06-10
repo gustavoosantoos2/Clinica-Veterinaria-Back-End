@@ -2,8 +2,8 @@ package model.services;
 
 import java.util.List;
 
-import model.Animal;
 import model.dao.AnimalDAO;
+import model.entites.Animal;
 
 public class AnimalService {
 	private AnimalDAO dao;

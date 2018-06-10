@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.Animal;
 import model.dao.AnimalDAO;
+import model.entites.Animal;
 import model.services.AnimalService;
 import model.utils.Serializer;
 

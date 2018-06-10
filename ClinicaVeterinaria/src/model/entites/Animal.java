@@ -1,9 +1,9 @@
-package model;
+package model.entites;
 
 import java.time.DateTimeException;
 import java.util.Date;
 
-import model.Especie;
+import model.entites.Especie;
 import model.utils.DateUtils;
 import model.utils.StringUtils;
 

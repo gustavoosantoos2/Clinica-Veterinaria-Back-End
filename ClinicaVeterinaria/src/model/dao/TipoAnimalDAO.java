@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import model.TipoAnimal;
+import model.entites.TipoAnimal;
 
 public class TipoAnimalDAO extends AbstractDAO<TipoAnimal, String> {
 
