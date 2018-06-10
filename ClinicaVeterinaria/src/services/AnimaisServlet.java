@@ -26,7 +26,11 @@ public class AnimaisServlet extends HttpServlet {
 		String action = request.getParameter("action");
 		
 		if (action.equals("listar")) {
-			listar(request, response);
+			try {
+				listar(request, response);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		else if (action.equals("buscar")) {
 			String id = request.getParameter("id");
@@ -39,7 +43,7 @@ public class AnimaisServlet extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	private void listar(HttpServletRequest request, HttpServletResponse response) {
+	private void listar(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		
 		try {
 			AnimalService service = new AnimalService(new AnimalDAO());
@@ -51,7 +55,8 @@ public class AnimaisServlet extends HttpServlet {
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write(json);
 		} catch (Exception e) {
-			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			throw e;
+//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 	
