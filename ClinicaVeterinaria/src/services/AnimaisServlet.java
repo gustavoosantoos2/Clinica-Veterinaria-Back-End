@@ -32,8 +32,6 @@ public class AnimaisServlet extends HttpServlet {
 			String id = request.getParameter("id");
 			buscar(request, response, Long.getLong(id));
 		}
-		
-		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	//doPost será para inclusões, updates e deletes...
