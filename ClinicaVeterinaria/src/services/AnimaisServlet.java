@@ -1,5 +1,6 @@
 package services;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 
@@ -20,11 +21,11 @@ import model.utils.Serializer;
 @WebServlet("/AnimaisServlet")
 public class AnimaisServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+
 	//doGet será para listar e buscar por ID...
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getParameter("action");
-		
+
 		if (action.equals("listar")) {
 			try {
 				listar(request, response);
@@ -41,36 +42,64 @@ public class AnimaisServlet extends HttpServlet {
 
 	//doPost será para inclusões, updates e deletes...
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
+		try {
+			StringBuilder json = new StringBuilder();
+			BufferedReader reader = request.getReader();
+			String linha;
+			while( (linha = reader.readLine()) != null ){
+				json.append(linha);
+			}
+			Animal a = new Animal();
+			Serializer<Animal> serializer = new Serializer<>();
+			System.out.println(json.toString());
+			a = serializer.desserialize(json.toString());
+			gravar(request, response, a);
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
 	}
-	
+
 	private void listar(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		
+
 		try {
 			AnimalService service = new AnimalService(new AnimalDAO());
 			List<Animal> animais = service.listar();
-			
+
 			Serializer<Animal> serializer = new Serializer<>();
 			String json = serializer.serialize(animais);
-			
+
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write(json);
 		} catch (Exception e) {
 			throw e;
-//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			//			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
-	
+
 	private void buscar(HttpServletRequest request, HttpServletResponse response, Long id) {
 		try {
 			AnimalService service = new AnimalService(new AnimalDAO());
 			Animal animal = service.buscar(id);
-			
+
 			Serializer<Animal> serializer = new Serializer<>();
 			String json = serializer.serialize(animal);
-			
+
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write(json);
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	private void gravar(HttpServletRequest request, HttpServletResponse response, Animal animal) {
+		try {
+			AnimalService service = new AnimalService(new AnimalDAO());			
+			if(service.buscar(animal.getId()) == null) {
+				service.salvar(animal);
+			}
+			response.setStatus(HttpServletResponse.SC_OK);
+
+
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
