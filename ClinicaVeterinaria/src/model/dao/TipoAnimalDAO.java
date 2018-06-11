@@ -7,22 +7,22 @@ import java.util.ArrayList;
 
 import model.entites.TipoAnimal;
 
-public class TipoAnimalDAO extends AbstractDAO<TipoAnimal, String> {
+public class TipoAnimalDAO extends AbstractDAO<TipoAnimal, Long> {
 
 	@Override
-	protected PreparedStatement criarStatementBuscar(Connection conexao, String id) throws Exception {
+	protected PreparedStatement criarStatementBuscar(Connection conexao, Long id) throws Exception {
 		String sql = "select acronimo, nome, descricao from tipo_animal where acronimo = ?";
 		PreparedStatement ps = conexao.prepareStatement(sql);
-		ps.setString(1, id);
+		ps.setLong(1, id);
 
 		return ps;
 	}
 
 	@Override
-	protected PreparedStatement criarStatementRemover(Connection conexao, String id) throws Exception {
+	protected PreparedStatement criarStatementRemover(Connection conexao, Long id) throws Exception {
 		String sql = "delete from tipo_animal where acronimo = ?";
 		PreparedStatement ps = conexao.prepareStatement(sql);
-		ps.setString(1, id);
+		ps.setLong(1, id);
 
 		return ps;
 	}

@@ -1,10 +1,5 @@
 package services;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -48,7 +43,6 @@ public class AnimaisServlet extends HttpServlet {
 			Serializer serializer = new Serializer();
 			Animal animal = serializer.desserialize(request.getReader(), Animal.class);
 			AnimalService service = new AnimalService(new AnimalDAO());
-			
 			try {
 				service.salvar(animal);
 				response.setStatus(HttpServletResponse.SC_OK);
