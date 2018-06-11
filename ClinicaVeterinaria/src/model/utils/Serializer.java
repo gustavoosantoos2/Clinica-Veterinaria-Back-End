@@ -1,27 +1,37 @@
 package model.utils;
-import java.lang.reflect.Type;
+
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.GsonBuilder;
 
-public class Serializer<T> {
-	public String serialize(T obj) {
-		return new Gson().toJson(obj);
+public class Serializer {
+	public String serialize(Object obj) {
+		return createParser().toJson(obj);
+	}
+
+	public String serialize(List<Object> objs) {
+		return createParser().toJson(objs);
+	}
+
+	public <T> T desserialize(String json, Class<T> classType) {
+		return (T) createParser().fromJson(json, classType);
 	}
 	
-	public String serialize(List<T> objs) {
-		return new Gson().toJson(objs);
+	public <T> T desserialize(BufferedReader reader, Class<T> classType) {
+		return (T) createParser().fromJson(reader, classType);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> List<T> desserializeCollection(String json, Class<T> classType) {
+		return createParser().fromJson(json, ArrayList.class);
 	}
 	
-	public T desserialize(String json) {
-		Type type = new TypeToken<T>(){}.getType();
-		return new Gson().fromJson(json, type);
-	}
-	
-	public List<T> desserializeCollection(String json) {
-		Type listType = new TypeToken<ArrayList<T>>(){}.getType();
-		return new Gson().fromJson(json, listType);
+	private Gson createParser() {
+		return new GsonBuilder()
+				.setDateFormat("dd/MM/yyyy")
+				.create();
 	}
 }
