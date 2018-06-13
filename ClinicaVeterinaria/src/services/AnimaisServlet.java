@@ -68,8 +68,8 @@ public class AnimaisServlet extends HttpServlet {
 		Animal a = null;
 		try {
 			a = service.buscar(id);
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		} catch (Exception e1) {
+			e1.printStackTrace();
 		}
 		if (a != null && a.getId() >= 0) {
 			try {
