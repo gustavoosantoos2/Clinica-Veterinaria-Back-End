@@ -21,8 +21,9 @@ import model.utils.Serializer;
 public class AnimaisServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	//doGet será para listar e buscar por ID...
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	// doGet será para listar e buscar por ID...
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String action = request.getParameter("action");
 
 		if (action.equalsIgnoreCase("listar")) {
@@ -31,70 +32,66 @@ public class AnimaisServlet extends HttpServlet {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
-		else if (action.equalsIgnoreCase("buscar")) {
+		} else if (action.equalsIgnoreCase("buscar")) {
 			String id = request.getParameter("id");
 			Long parsedId = Long.parseLong(id);
 			buscar(request, response, parsedId);
 		}
 	}
 
-	//doPost será para inclusões, updates e deletes...
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	// doPost será para inclusões, updates e deletes...
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		String action = request.getParameter("action");
-		Long id;
+
+		if (action.equalsIgnoreCase("incluir")) {
+			Incluir(request, response);
+		} else if (action.equalsIgnoreCase("atualizar")) {
+			Atualizar(request, response);
+		} else if (action.equalsIgnoreCase("deletar")) {
+			Remover(request, response);
+		}
+
+	}
+
+	private void Remover(HttpServletRequest request, HttpServletResponse response) {
+		Long id = null;
+		
 		try {
 			id = Long.parseLong(request.getParameter("id"));
-		}catch (Exception e) {
-			id = new Long(-1);
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return;
 		}
-		if(id >= 0) {
-			if (action.equalsIgnoreCase("incluir")) {
-
-				Serializer serializer = new Serializer();
-				Animal animal = serializer.desserialize(request.getReader(), Animal.class);
-				AnimalService service = new AnimalService(new AnimalDAO());
-				try {
-					service.salvar(animal);
-					response.setStatus(HttpServletResponse.SC_OK);
-				} catch (Exception e) {
-					e.printStackTrace();
-					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				}
-
-			} else if (action.equalsIgnoreCase("atualizar")) {
-				Serializer serializer = new Serializer();
-				Animal animal = serializer.desserialize(request.getReader(), Animal.class);
-				AnimalService service = new AnimalService(new AnimalDAO());
-				try {
-					service.atualizar(animal);
-					response.setStatus(HttpServletResponse.SC_OK);
-				} catch (Exception e) {
-					e.printStackTrace();
-					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				}
+		
+		AnimalService service = new AnimalService(new AnimalDAO());
+		Animal a = null;
+		try {
+			a = service.buscar(id);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		if (a != null && a.getId() >= 0) {
+			try {
+				service.remover(a.getId());
+				response.setStatus(HttpServletResponse.SC_OK);
+			} catch (Exception e) {
+				e.printStackTrace();
+				response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			}
-			else if (action.equalsIgnoreCase("deletar")) {
-				AnimalService service = new AnimalService(new AnimalDAO());
-				Animal a = null;
-				try {
-					a = service.buscar(id);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-				if ( a !=null && a.getId() >= 0) {
-					try {
-						service.remover(a.getId());
-						response.setStatus(HttpServletResponse.SC_OK);
-					} catch (Exception e) {
-						e.printStackTrace();
-						response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-					}
-				}else {
-					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-				}
-			}
-		}else {
+		} else {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+		}
+	}
+
+	private void Atualizar(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		Animal animal = desserializeAnimalFromRequestBody(request);
+		AnimalService service = new AnimalService(new AnimalDAO());
+		try {
+			service.atualizar(animal);
+			response.setStatus(HttpServletResponse.SC_OK);
+		} catch (Exception e) {
+			e.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -108,8 +105,8 @@ public class AnimaisServlet extends HttpServlet {
 			Serializer serializer = new Serializer();
 			String json = serializer.serialize(animais);
 
-			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write(json);
+			response.setStatus(HttpServletResponse.SC_OK);
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			throw e;
@@ -124,10 +121,27 @@ public class AnimaisServlet extends HttpServlet {
 			Serializer serializer = new Serializer();
 			String json = serializer.serialize(animal);
 
-			response.setStatus(HttpServletResponse.SC_OK);
 			response.getWriter().write(json);
+			response.setStatus(HttpServletResponse.SC_OK);
 		} catch (Exception e) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	private void Incluir(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		Animal animal = desserializeAnimalFromRequestBody(request);
+		AnimalService service = new AnimalService(new AnimalDAO());
+		try {
+			service.salvar(animal);
+			response.setStatus(HttpServletResponse.SC_OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	private Animal desserializeAnimalFromRequestBody(HttpServletRequest request) throws IOException {
+		Serializer serializer = new Serializer();
+		return serializer.desserialize(request.getReader(), Animal.class);
 	}
 }
