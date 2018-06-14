@@ -37,9 +37,9 @@ public class Animal {
 
 	public void setNome(String nome) throws Exception {
 		if (StringUtils.isNullOrWhiteSpace(nome))
-			throw new Exception("O nome não pode ser vazio.");
+			throw new IllegalArgumentException("O nome não pode ser vazio.");
 		if (nome.length() > 50)
-			throw new Exception("O nome não pode ter mais de 50 caracteres.");
+			throw new IllegalArgumentException("O nome não pode ter mais de 50 caracteres.");
 		this.nome = nome;
 	}
 
