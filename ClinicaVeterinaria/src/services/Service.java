@@ -58,7 +58,7 @@ public abstract class Service<T, U> extends HttpServlet {
 				return;
 			}
 			
-			dao.remover(primaryKey);
+			dao.removerComRelacionamentos(primaryKey);
 			ok(response);
 		} catch (Exception e) {
 			internalServerError(response, "Houve um erro ao remover objeto.");
@@ -66,25 +66,29 @@ public abstract class Service<T, U> extends HttpServlet {
 	}
 	
 	private void ok(HttpServletResponse response) {
+		response.setCharacterEncoding("UTF-8");
 		response.setStatus(HttpServletResponse.SC_OK);
 	}
 	
 	private void ok(HttpServletResponse response, String returnMessage) throws IOException {
-		response.setStatus(HttpServletResponse.SC_OK);
+		ok(response);
 		response.getWriter().write(returnMessage);
 	}
 	
 	private void badRequest(HttpServletResponse response, String errorMessage) throws IOException {
+		response.setCharacterEncoding("UTF-8");
 		response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 		response.getWriter().write(errorMessage);
 	}
 	
 	private void notFound(HttpServletResponse response, String errorMessage) throws IOException {
+		response.setCharacterEncoding("UTF-8");
 		response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 		response.getWriter().write(errorMessage);
 	}
 	
 	private void internalServerError(HttpServletResponse response, String errorMessage) throws IOException {
+		response.setCharacterEncoding("UTF-8");
 		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		response.getWriter().write(errorMessage);
 	}

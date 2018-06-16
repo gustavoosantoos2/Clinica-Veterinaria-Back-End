@@ -32,8 +32,6 @@ public class TipoAnimal {
 	}
 	
 	public void setDescricao(String descricao) {
-		if (StringUtils.isNullOrWhiteSpace(descricao))
-			throw new IllegalArgumentException("Descrição não deve ser vazia.");
 		this.descricao = descricao;
 	}
 }

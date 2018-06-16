@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import model.entites.Especie;
+import model.entites.TipoAnimal;
 
 public class EspecieDAO extends AbstractDAO<Especie, Long> {
 
@@ -28,7 +29,8 @@ public class EspecieDAO extends AbstractDAO<Especie, Long> {
 
 	@Override
 	protected PreparedStatement criarStatementListar(Connection conexao) throws Exception {
-		return conexao.prepareStatement("select id,nome,descricao from especie");
+		return conexao.prepareStatement("select e.id, e.nome, e.descricao, t.acronimo from especie e "+ 
+										"inner join tipo_animal t on e.tipo_animal_acronimo = t.acronimo");
 
 	}
 
@@ -38,13 +40,17 @@ public class EspecieDAO extends AbstractDAO<Especie, Long> {
 		e.setId(rs.getLong(1));
 		e.setNome(rs.getString(2));
 		e.setDescricao(rs.getString(3));
-
+		
+		TipoAnimal tipo = new TipoAnimal();
+		tipo.setAcronimo(rs.getString(4));
+		e.setTipoAnimal(tipo);
+		
 		return e;
 	}
 
 	@Override
 	protected PreparedStatement criarStatementBuscar(Connection conexao, Long id) throws Exception {
-		String sql = "select nome descricao, tipo_animal_acronimo from especie where id = ?";
+		String sql = "select id, nome, descricao, tipo_animal_acronimo from especie where id = ?";
 		PreparedStatement ps = conexao.prepareStatement(sql);
 		ps.setLong(1, id);
 
@@ -72,7 +78,8 @@ public class EspecieDAO extends AbstractDAO<Especie, Long> {
 		return ps;
 	}
 
-	public void removerComRelacionamentos(Connection conexao, Long id) throws Exception {
+	public void removerComRelacionamentos(Long id) throws Exception {
+		Connection conexao = ConnectionFactory.getConnection();
 		PreparedStatement psAnimais = null;
 		PreparedStatement psEspecie = null;
 
@@ -83,7 +90,7 @@ public class EspecieDAO extends AbstractDAO<Especie, Long> {
 			psAnimais = conexao.prepareStatement(sqlRemoveAnimais);
 			psAnimais.setLong(1, id);
 
-			String sqlRemoveEspecie = "delete from tipo_animal where id = ?";
+			String sqlRemoveEspecie = "delete from especie where id = ?";
 			psEspecie = conexao.prepareStatement(sqlRemoveEspecie);
 			psEspecie.setLong(1, id);
 
@@ -105,6 +112,13 @@ public class EspecieDAO extends AbstractDAO<Especie, Long> {
 			try {
 				if (psAnimais != null && !psAnimais.isClosed())
 					psAnimais.close();
+			} catch (Exception e) {
+				ultimaExcecao = e;
+			}
+			
+			try {
+				if (conexao != null)
+					conexao.close();
 			} catch (Exception e) {
 				ultimaExcecao = e;
 			}

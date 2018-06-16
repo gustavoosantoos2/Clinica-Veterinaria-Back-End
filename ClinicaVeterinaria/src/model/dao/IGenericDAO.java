@@ -10,6 +10,8 @@ public interface IGenericDAO<T,U> {
 	
 	public void remover(U id) throws Exception;
 	
+	public void removerComRelacionamentos(U id) throws Exception;
+	
 	public void atualizar(T objeto) throws Exception;
 	
 	public void persistir(T objeto) throws Exception;

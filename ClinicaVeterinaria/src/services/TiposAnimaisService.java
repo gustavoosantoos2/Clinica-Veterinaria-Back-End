@@ -5,7 +5,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import model.dao.AbstractDAO;
 import model.dao.TipoAnimalDAO;
-import model.entites.Animal;
 import model.entites.TipoAnimal;
 import model.utils.Serializer;
 
@@ -23,13 +22,6 @@ public class TiposAnimaisService extends Service<TipoAnimal, String> {
 	
 	@Override
 	protected TipoAnimal parseEntityFromParams(HttpServletRequest request) throws Exception {
-//		TipoAnimal tipoAnimal = new TipoAnimal();
-//		tipoAnimal.setNome("nome");
-//		tipoAnimal.setAcronimo("acr");
-//		tipoAnimal.setDescricao("descricao");
-//		
-//		return tipoAnimal;
-		
 		Serializer serializer = new Serializer();
 		return serializer.desserialize(request.getReader(), TipoAnimal.class);
 	}

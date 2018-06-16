@@ -82,4 +82,9 @@ public class AnimalDAO extends AbstractDAO<Animal, Long> {
 		statement.setLong(1, id);
 		return statement;
 	}
+	
+	@Override
+	public void removerComRelacionamentos(Long id) throws Exception {
+		remover(id);
+	}
 }

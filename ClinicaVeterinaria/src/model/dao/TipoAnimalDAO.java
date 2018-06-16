@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import model.entites.TipoAnimal;
 
 public class TipoAnimalDAO extends AbstractDAO<TipoAnimal, String> {
-
+	
 	@Override
 	protected PreparedStatement criarStatementBuscar(Connection conexao, String id) throws Exception {
 		String sql = "select acronimo, nome, descricao from tipo_animal where acronimo = ?";
@@ -70,7 +70,8 @@ public class TipoAnimalDAO extends AbstractDAO<TipoAnimal, String> {
 		return tipoAnimal;
 	}
 
-	public void removerComRelacionamentos(Connection conexao, String acronimo) throws Exception {
+	public void removerComRelacionamentos(String acronimo) throws Exception {
+		Connection conexao = ConnectionFactory.getConnection();
 		EspecieDAO especieDao = new EspecieDAO();
 		PreparedStatement psEspecies = null;
 		ResultSet rsEspecies = null;
@@ -92,7 +93,7 @@ public class TipoAnimalDAO extends AbstractDAO<TipoAnimal, String> {
 
 			especiesIds.forEach(especieId -> {
 				try {
-					especieDao.removerComRelacionamentos(conexao, especieId);
+					especieDao.removerComRelacionamentos(especieId);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
