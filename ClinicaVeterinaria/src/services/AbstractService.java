@@ -1,6 +1,7 @@
 package services;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -14,9 +15,9 @@ import model.utils.Serializer;
 public abstract class AbstractService<T, U> extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	protected abstract U parsePrimaryKeyFromParams(HttpServletRequest request);
-	protected abstract T parseEntityFromParams(HttpServletRequest request) throws Exception;
 	protected abstract AbstractDAO<T, U> createDao();
+	protected abstract T parseEntityFromParams(HttpServletRequest request) throws Exception;
+	protected abstract U parsePrimaryKeyFromParams(HttpServletRequest request);
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -36,7 +37,6 @@ public abstract class AbstractService<T, U> extends HttpServlet {
 		try {
 			AbstractDAO<T, U> dao = createDao();
 			T object = parseEntityFromParams(request);
-			
 			dao.persistir(object);
 			ok(response);
 		} catch (Exception e) {
