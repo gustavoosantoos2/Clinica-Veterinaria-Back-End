@@ -15,7 +15,7 @@ public abstract class AbstractService<T, U> extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	protected abstract U parsePrimaryKeyFromParams(HttpServletRequest request);
-	protected abstract T parseEntityFromParams(HttpServletRequest request);
+	protected abstract T parseEntityFromParams(HttpServletRequest request) throws Exception;
 	protected abstract AbstractDAO<T, U> createDao();
 	
 	@Override
