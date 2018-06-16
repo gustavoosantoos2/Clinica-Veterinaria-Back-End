@@ -14,7 +14,7 @@ import model.utils.Serializer;
  * Servlet implementation class EspeciesService
  */
 @WebServlet("/EspeciesService")
-public class EspeciesService extends AbstractService<Especie, Long> {
+public class EspeciesService extends Service<Especie, Long> {
 	private static final long serialVersionUID = 1L;
 
 	@Override

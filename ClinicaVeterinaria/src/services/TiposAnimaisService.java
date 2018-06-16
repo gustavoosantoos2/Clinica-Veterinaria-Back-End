@@ -13,7 +13,7 @@ import model.utils.Serializer;
  * Servlet implementation class TiposAnimaisService
  */
 @WebServlet("/TiposAnimaisService")
-public class TiposAnimaisService extends AbstractService<TipoAnimal, String> {
+public class TiposAnimaisService extends Service<TipoAnimal, String> {
 	private static final long serialVersionUID = 1L;
 
 	@Override

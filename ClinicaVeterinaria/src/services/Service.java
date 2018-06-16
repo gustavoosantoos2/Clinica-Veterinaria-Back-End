@@ -1,7 +1,6 @@
 package services;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -12,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import model.dao.AbstractDAO;
 import model.utils.Serializer;
 
-public abstract class AbstractService<T, U> extends HttpServlet {
+public abstract class Service<T, U> extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	protected abstract AbstractDAO<T, U> createDao();
