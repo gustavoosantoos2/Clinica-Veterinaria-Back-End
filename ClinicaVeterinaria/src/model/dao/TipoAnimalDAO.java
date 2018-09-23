@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import model.entites.TipoAnimal;
 
@@ -69,15 +70,13 @@ public class TipoAnimalDAO extends AbstractDAO<TipoAnimal, String> {
 
 		return tipoAnimal;
 	}
-
+	/*
 	public void removerComRelacionamentos(String acronimo) throws Exception {
-		Connection conexao = ConnectionFactory.getConnection();
+		Connection conexao = ConnectionSingleton.getInstance().getConnection();
 		EspecieDAO especieDao = new EspecieDAO();
 		PreparedStatement psEspecies = null;
 		ResultSet rsEspecies = null;
-
 		PreparedStatement psTipoAnimal = null;
-
 		Exception ultimaExcecao = null;
 
 		try {
@@ -131,5 +130,36 @@ public class TipoAnimalDAO extends AbstractDAO<TipoAnimal, String> {
 		
 		if (ultimaExcecao != null)
 			throw ultimaExcecao;
+	}
+	*/
+	
+	//1616700 Diego Seronato - Alteracao do remover com relacionamentos, abstraido na classe AbstractDAO
+	@Override
+	protected List<PreparedStatement> criarStatementRemoverComRelacionamento(Connection conexao, String acronimo)
+			throws Exception {
+		List<PreparedStatement> statements = new ArrayList<>();	
+		PreparedStatement statement = null;
+		statement = conexao.prepareStatement("delete from animal where id in (\n" + 
+											"select a.id from animal a\n" + 
+											"join especie e on a.especie_id = e.id\n" + 
+											"join tipo_animal ta \n" + 
+											"on e.tipo_animal_acronimo = ta.acronimo\n" + 
+											"where acronimo = ?\n" + 
+											")");
+		statement.setString(1, acronimo);
+		statements.add(statement);
+		statement = conexao.prepareStatement("delete from especie where id in (\n" + 
+											"select id from especie e\n" + 
+											"join tipo_animal ta \n" + 
+											"on e.tipo_animal_acronimo = ta.acronimo\n" + 
+											"where acronimo = ?\n" + 
+											")");
+		statement.setString(1, acronimo);
+		statements.add(statement);
+		statement = conexao.prepareStatement("delete from tipo_animal ta \n" + 
+											"where acronimo = ?");
+		statement.setString(1, acronimo);
+		statements.add(statement);	
+		return statements;
 	}
 }

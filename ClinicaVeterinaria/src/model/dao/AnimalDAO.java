@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.List;
 
 import model.entites.Animal;
 import model.entites.Especie;
@@ -82,9 +83,15 @@ public class AnimalDAO extends AbstractDAO<Animal, Long> {
 		statement.setLong(1, id);
 		return statement;
 	}
-	
+
 	@Override
-	public void removerComRelacionamentos(Long id) throws Exception {
-		remover(id);
+	protected List<PreparedStatement> criarStatementRemoverComRelacionamento(Connection conexao, Long id) throws Exception {
+		List<PreparedStatement> statements = null;	
+
+		
+		
+		return statements;
 	}
+	
+
 }

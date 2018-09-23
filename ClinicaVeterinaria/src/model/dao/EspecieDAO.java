@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.List;
 
 import model.entites.Especie;
 import model.entites.TipoAnimal;
@@ -79,7 +80,7 @@ public class EspecieDAO extends AbstractDAO<Especie, Long> {
 	}
 
 	public void removerComRelacionamentos(Long id) throws Exception {
-		Connection conexao = ConnectionFactory.getConnection();
+		Connection conexao = ConnectionSingleton.getInstance().getConnection();
 		PreparedStatement psAnimais = null;
 		PreparedStatement psEspecie = null;
 
@@ -126,5 +127,12 @@ public class EspecieDAO extends AbstractDAO<Especie, Long> {
 
 		if (ultimaExcecao != null)
 			throw ultimaExcecao;
+	}
+
+	@Override
+	protected List<PreparedStatement> criarStatementRemoverComRelacionamento(Connection conexao, Long id)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
