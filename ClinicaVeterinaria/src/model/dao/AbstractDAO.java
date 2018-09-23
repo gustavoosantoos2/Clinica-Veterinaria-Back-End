@@ -42,12 +42,7 @@ public abstract class AbstractDAO<T, U> implements IGenericDAO<T, U> {
 			} catch (Exception e) {
 				ultimaExcecao = e;
 			}
-			try {
-				if (con != null)
-					con.close();
-			} catch (Exception e) {
-				ultimaExcecao = e;
-			}
+			
 		}
 		
 		throw ultimaExcecao;
@@ -89,7 +84,7 @@ public abstract class AbstractDAO<T, U> implements IGenericDAO<T, U> {
 			try {
 				if (con != null) {
 					con.rollback();
-					con.close();
+					
 				}
 			} catch (Exception e) {
 				ultimaExcecao = e;
@@ -131,12 +126,7 @@ public abstract class AbstractDAO<T, U> implements IGenericDAO<T, U> {
 			} catch (Exception e) {
 				ultimaExcecao = e;
 			}
-			try {
-				if (con != null)
-					con.close();
-			} catch (Exception e) {
-				ultimaExcecao = e;
-			}
+			
 		}
 
 		throw ultimaExcecao;
@@ -173,7 +163,7 @@ public abstract class AbstractDAO<T, U> implements IGenericDAO<T, U> {
 			try {
 				if (con != null) {
 					con.rollback();
-					con.close();
+					
 				}
 			} catch (Exception e) {
 				ultimaExcecao = e;
@@ -215,7 +205,7 @@ public abstract class AbstractDAO<T, U> implements IGenericDAO<T, U> {
 			try {
 				if (con != null) {
 					con.rollback();
-					con.close();
+					
 				}
 			} catch (Exception e) {
 				ultimaExcecao = e;
@@ -280,7 +270,7 @@ public abstract class AbstractDAO<T, U> implements IGenericDAO<T, U> {
 			}
 			try {
 				if (con != null) {
-					con.close();
+					
 				}
 			} catch (Exception e) {
 				ultimaExcecao = e;

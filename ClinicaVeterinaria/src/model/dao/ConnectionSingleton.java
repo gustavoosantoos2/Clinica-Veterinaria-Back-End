@@ -8,8 +8,18 @@ import java.sql.SQLException;
 
 public class ConnectionSingleton {
 	private static ConnectionSingleton instance = null;
+	private Connection conn = null;
 	
 	private ConnectionSingleton() {
+		try {
+			Class.forName("org.hsqldb.jdbcDriver");
+			conn = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/clinicaveterinariadb", "SA", "");
+			conn.setAutoCommit(false);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public static ConnectionSingleton getInstance(){
@@ -19,14 +29,6 @@ public class ConnectionSingleton {
 	}
 	
 	public Connection getConnection() throws ClassNotFoundException {
-		try {
-			Class.forName("org.hsqldb.jdbcDriver");
-			Connection conn = DriverManager.getConnection("jdbc:hsqldb:hsql://localhost/clinicaveterinariadb", "SA", "");
-			conn.setAutoCommit(false);
-			
-			return conn;
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
+		return conn;
 	}
 }
